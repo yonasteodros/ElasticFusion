@@ -26,17 +26,31 @@ find_package(CUDA REQUIRED)
 find_package(OpenNI2 REQUIRED)
 find_package(efusion REQUIRED)
 find_package(SuiteSparse REQUIRED)
+find_package(OpenCV)
+find_package(RealSense2 QUIET)
 
-if(WIN32)
-  find_package(RealSense QUIET)
-  CANONIFY_BOOL(REALSENSE_FOUND)
-  message(STATUS "librealsense found: ${REALSENSE_FOUND}")
-  option(WITH_REALSENSE "Build with Intel RealSense support?" ${REALSENSE_FOUND})
+message(STATUS "librealsense found: ${REALSENSE_FOUND}")
+option(WITH_REALSENSE "Build with Intel RealSense2 support?" ${REALSENSE2_FOUND})
+
+if(WITH_REALSENSE)
+    include_directories(${REALSENSE2_INCLUDE_DIR})
+    add_definitions(-DWITH_REALSENSE)
+    set(EXTRA_LIBS ${EXTRA_LIBS} ${REALSENSE2_LIBRARY})
+endif()
+
+find_package(ZED 2.3 REQUIRED)
+
+if(WITH_ZED)
+  include_directories("/home/rjn/ElasticFusion/deps/Pangolin/include/pangolin")
+  include_directories(${ZED_INCLUDE_DIRS})   
+  add_definitions(-DWITH_ZED)
+  set(EXTRA_LIBS ${EXTRA_LIBS} ${ZED_LIBRARY})
 endif()
 
 if(WIN32)
   include_directories(${JPEG_INCLUDE_DIR})
 endif()
+
 
 include_directories(${ZLIB_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIRS})
@@ -45,11 +59,6 @@ include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EFUSION_INCLUDE_DIR})
 include_directories(${OPENNI2_INCLUDE_DIR})
 
-if(WITH_REALSENSE)
-  include_directories(${REALSENSE_INCLUDE_DIR})
-  add_definitions(-DWITH_REALSENSE)
-  set(EXTRA_LIBS ${EXTRA_LIBS} ${REALSENSE_LIBRARY})
-endif()
 
 file(GLOB srcs *.cpp)
 file(GLOB tools_srcs Tools/*.cpp)
@@ -69,8 +78,7 @@ else()
   add_definitions(-Dlinux=1)
 endif()
 
-set(CMAKE_CXX_FLAGS ${ADDITIONAL_CMAKE_CXX_FLAGS} "-O3 -msse2 -msse3 -Wall -std=c++11")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -std=c++11")
+set(CMAKE_CXX_FLAGS ${ADDITIONAL_CMAKE_CXX_FLAGS} "-O3 -Wall -std=c++11")
 
 add_executable(ElasticFusion 
                ${srcs}
@@ -89,7 +97,9 @@ target_link_libraries(ElasticFusion
                       ${OPENNI2_LIBRARY}
                       ${SUITESPARSE_LIBRARIES}
                       ${BLAS_LIBRARIES}
+                      ${ZED_LIBRARIES}                     
                       ${LAPACK_LIBRARIES}
+                      ${OpenCV_LIBRARIES}                       
 )
 
 
@@ -98,3 +108,4 @@ INSTALL(TARGETS ElasticFusion
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
 )
+

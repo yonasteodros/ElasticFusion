@@ -67,6 +67,16 @@ MainController::MainController(int argc, char * argv[])
           good = ((LiveLogReader *)logReader)->cam->ok();
         }
 #endif
+
+#ifdef WITH_ZED
+        if(!good)
+        {
+          delete logReader;
+          logReader = new LiveLogReader(logFile, flipColors, LiveLogReader::CameraType::Zed);        
+          good = ((LiveLogReader *)logReader)->cam->ok();      
+        }
+#endif
+
     }
 
     if(Parse::get().arg(argc, argv, "-p", poseFile) > 0)
