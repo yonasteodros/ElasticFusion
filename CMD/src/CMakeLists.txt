@@ -28,17 +28,10 @@ find_package(efusion REQUIRED)
 find_package(SuiteSparse REQUIRED)
 find_package(OpenCV)
 find_package(RealSense2 QUIET)
-
 find_package(cwipc_util REQUIRED )
-include_directories(${cwipc_util_INCLUDE_DIRS})
-link_directories(${cwipc_util_LIBRARY_DIRS})
-add_definitions(${cwipc_util_PYTHON_DIRS})
-
-
-
 find_package(PCL 1.8 REQUIRED COMPONENTS common io octree)
-include_directories(${PCL_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
+
+
 add_definitions(${PCL_DEFINITIONS})
 
 
@@ -72,6 +65,8 @@ endif()
 
 link_directories(${ZED_LIBRARY_DIR})
 link_directories(${CUDA_LIBRARY_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+link_directories(${cwipc_util_LIBRARY_DIRS})
 
 include_directories(${ZLIB_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIRS})
@@ -79,6 +74,10 @@ include_directories(${Pangolin_INCLUDE_DIRS})
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EFUSION_INCLUDE_DIR})
 include_directories(${OPENNI2_INCLUDE_DIR})
+include_directories(${PCL_INCLUDE_DIRS})
+include_directories(${cwipc_util_INCLUDE_DIRS})
+
+add_definitions(${cwipc_util_PYTHON_DIRS})
 
 
 file(GLOB srcs *.cpp)

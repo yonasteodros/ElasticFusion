@@ -566,6 +566,11 @@ void MainController::run()
             break;
         }
 
+        if(gui->Stream->Get())
+        {
+            StreamObj = new PointcloudStreamer();
+            std::cout<<"Works!!!!"<<std::endl;
+        }
         if(pangolin::Pushed(*gui->save))
         {
             eFusion->savePly();

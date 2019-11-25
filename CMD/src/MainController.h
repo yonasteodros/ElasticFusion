@@ -24,6 +24,9 @@
 #include "Tools/RawLogReader.h"
 #include "Tools/LiveLogReader.h"
 
+//compression libraries
+#include "pointcloudstreamer.h"
+
 #ifndef MAINCONTROLLER_H_
 #define MAINCONTROLLER_H_
 
@@ -41,6 +44,7 @@ class MainController
         void loadCalibration(const std::string & filename);
 
         bool good;
+        PointcloudStreamer * StreamObj;
         ElasticFusion * eFusion;
 
         GUI * gui;
