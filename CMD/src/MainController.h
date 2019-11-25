@@ -42,6 +42,7 @@ class MainController
 
         bool good;
         ElasticFusion * eFusion;
+
         GUI * gui;
         GroundTruthOdometry * groundTruthOdometry;
         LogReader * logReader;

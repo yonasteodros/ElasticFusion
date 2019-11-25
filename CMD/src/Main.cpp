@@ -17,10 +17,12 @@
  */
 
 #include "MainController.h"
-#include <sl/Camera.hpp>
+
+
+//#include <sl/Camera.hpp>
 #include <opencv2/opencv.hpp>
 
-cv::Mat slMat2cvMat(sl::Mat& input) {
+/*cv::Mat slMat2cvMat(sl::Mat& input) {
     // Mapping between MAT_TYPE and CV_TYPE
     int cv_type = -1;
     switch (input.getDataType()) {
@@ -38,62 +40,62 @@ cv::Mat slMat2cvMat(sl::Mat& input) {
     // cv::Mat and sl::Mat will share a single memory structure
     return cv::Mat(input.getHeight(), input.getWidth(), cv_type, input.getPtr<sl::uchar1>(sl::MEM_CPU));
 }
-
+*/
 int main(int argc, char * argv[])
 {
-   //MainController mainController(argc, argv);
-   // mainController.launch();
-
+   MainController mainController(argc, argv);
+   mainController.launch();
+ /*
     static const int w = 640;
     static const int h = 480;
     int64_t lastDepthTime;
 
     pangolin::CreateWindowAndBind("Main",w,h,pangolin::Params({{"scheme", "headless"}}));
     //Elastic fusion processs*/
-    Resolution::getInstance(640, 480);
-    Intrinsics::getInstance(528, 528, 320, 240);
+  //  Resolution::getInstance(640, 480);
+  //  Intrinsics::getInstance(528, 528, 320, 240);
 
 
     // Create a ZED camera object
-    sl::Camera zed;
+//    sl::Camera zed;
 
     // Set configuration parameters
     // Set configuration parameters
-    sl::InitParameters init_params;
-    init_params.camera_resolution = sl::RESOLUTION_HD1080;
-    init_params.depth_mode = sl::DEPTH_MODE_PERFORMANCE;
-    init_params.coordinate_units = sl::UNIT_METER;
+ //   sl::InitParameters init_params;
+//    init_params.camera_resolution = sl::RESOLUTION_HD1080;
+ //   init_params.depth_mode = sl::DEPTH_MODE_PERFORMANCE;
+ //   init_params.coordinate_units = sl::UNIT_METER;
 
     // Open the camera
-    sl::ERROR_CODE err = zed.open(init_params);
+ /*   sl::ERROR_CODE err = zed.open(init_params);
     if (err != sl::SUCCESS)
         exit(-1);
-
+*/
     // Set runtime parameters after opening the camera
-    sl::RuntimeParameters runtime_parameters;
-    runtime_parameters.sensing_mode = sl::SENSING_MODE_STANDARD; // Use STANDARD sensing mode
+  //  sl::RuntimeParameters runtime_parameters;
+  //  runtime_parameters.sensing_mode = sl::SENSING_MODE_STANDARD; // Use STANDARD sensing mode
 
 
 
     // Prepare new image size to retrieve half-resolution images
-    sl::Resolution image_size = zed.getResolution();
-    int new_width = image_size.width / 2;
-    int new_height = image_size.height / 2;
+  //  sl::Resolution image_size = zed.getResolution();
+  //  int new_width = image_size.width / 2;
+  //  int new_height = image_size.height / 2;
 
 
 
     // To share data between sl::Mat and cv::Mat, use slMat2cvMat()
     // Only the headers and pointer to the sl::Mat are copied, not the data itself
-    sl::Mat image_zed(new_width, new_height, sl::MAT_TYPE_8U_C4);
+/*    sl::Mat image_zed(new_width, new_height, sl::MAT_TYPE_8U_C4);
     cv::Mat image_ocv = slMat2cvMat(image_zed);
     sl::Mat depth_image_zed(new_width, new_height, sl::MAT_TYPE_8U_C4);
     cv::Mat depth_image_ocv = slMat2cvMat(depth_image_zed);
     sl::Mat point_cloud;
-
+*/
 
 
     // Capture 50 images and depth, then stop
-    int i = 0;
+/*    int i = 0;
     sl::Mat image, depth;
     std::cout << "Creating ElasticFusion object...\n";
     ElasticFusion eFusion;
@@ -110,6 +112,7 @@ int main(int argc, char * argv[])
                 zed.retrieveImage(depth_image_zed, sl::VIEW_DEPTH, sl::MEM_CPU, new_width, new_height);
                 lastDepthTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
                 //eFusion.processFrame(image_ocv,depth_image_ocv,lastDepthTime,currentPose,weightMultiplier);
+                 eFusion.processFrame()
                 // Display image and depth using cv:Mat which share sl:Mat data
                cv::imshow("Image", image_ocv);
                cv::imshow("Depth", depth_image_ocv);
@@ -118,17 +121,14 @@ int main(int argc, char * argv[])
               // eFusion.processFrame();
             }
         }
-
-
-
-
+ */
    // eFusion.processFrame()
-    std::cout << " ElasticFusion object created ...\n";
+   // std::cout << " ElasticFusion object created ...\n";
     // Swap frames and Process Events
-    pangolin::FinishFrame();
-    pangolin::QuitAll();
+   // pangolin::FinishFrame();
+   // pangolin::QuitAll();
     // Close the camera
-     zed.close();
+   //  zed.close();
 
     return 0;
 }

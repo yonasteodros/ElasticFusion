@@ -115,6 +115,7 @@ class GUI
             step = new pangolin::Var<bool>("ui.Step", false, false);
             save = new pangolin::Var<bool>("ui.Save", false, false);
             reset = new pangolin::Var<bool>("ui.Reset", false, false);
+            Stream = new pangolin::Var<bool>("ui.Stream", false, true);
             flipColors = new pangolin::Var<bool>("ui.Flip RGB", false, true);
 
             if(liveCap)
@@ -182,6 +183,7 @@ class GUI
             }
             delete step;
             delete save;
+            delete Stream;
             delete trackInliers;
             delete trackRes;
             delete confidenceThreshold;
@@ -382,6 +384,7 @@ class GUI
         pangolin::Var<bool> * pause,
                             * step,
                             * save,
+                            * Stream,
                             * reset,
                             * flipColors,
                             * rgbOnly,

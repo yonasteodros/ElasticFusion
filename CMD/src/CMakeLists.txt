@@ -29,6 +29,19 @@ find_package(SuiteSparse REQUIRED)
 find_package(OpenCV)
 find_package(RealSense2 QUIET)
 
+find_package(cwipc_util REQUIRED )
+include_directories(${cwipc_util_INCLUDE_DIRS})
+link_directories(${cwipc_util_LIBRARY_DIRS})
+add_definitions(${cwipc_util_PYTHON_DIRS})
+
+
+
+find_package(PCL 1.8 REQUIRED COMPONENTS common io octree)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+
 message(STATUS "librealsense found: ${REALSENSE_FOUND}")
 option(WITH_REALSENSE "Build with Intel RealSense2 support?" ${REALSENSE2_FOUND})
 
@@ -38,21 +51,27 @@ if(WITH_REALSENSE)
     set(EXTRA_LIBS ${EXTRA_LIBS} ${REALSENSE2_LIBRARY})
 endif()
 
-#ZED
-
-find_package(ZED 2 REQUIRED)
-find_package(CUDA ${ZED_CUDA_VERSION} EXACT REQUIRED)
-include_directories(${ZED_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-link_directories(${ZED_LIBRARY_DIR})
-link_directories(${CUDA_LIBRARY_DIRS})
-
 
 if(WIN32)
   include_directories(${JPEG_INCLUDE_DIR})
 endif()
 
+
+
+if(WITH_ZED)
+  find_package(ZED REQUIRED)
+  find_package(CUDA ${ZED_CUDA_VERSION} EXACT REQUIRED)
+  include_directories(${ZED_INCLUDE_DIRS})
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+  add_definitions(-DWITH_ZED)
+  set(EXTRA_LIBS ${EXTRA_LIBS} ${ZED_LIBRARY})
+endif()
+
+
+
+
+link_directories(${ZED_LIBRARY_DIR})
+link_directories(${CUDA_LIBRARY_DIRS})
 
 include_directories(${ZLIB_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIRS})
