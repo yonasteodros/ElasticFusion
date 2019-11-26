@@ -123,6 +123,9 @@ target_link_libraries(ElasticFusion
                       ${CUDA_CUDA_LIBRARY}
                       ${CUDA_CUDART_LIBRARY}
                       ${CUDA_NPP_LIBRARIES_ZED}
+                      ${PCL_LIBRARIES}
+                      ${cwipc_LIBRARIES}
+
 )
 
 

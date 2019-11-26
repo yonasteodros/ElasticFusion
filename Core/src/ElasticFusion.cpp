@@ -2,20 +2,20 @@
  * This file is part of ElasticFusion.
  *
  * Copyright (C) 2015 Imperial College London
- * 
- * The use of the code within this file and all code within files that 
- * make up the software that is ElasticFusion is permitted for 
- * non-commercial purposes only.  The full terms and conditions that 
- * apply to the code within this file are detailed within the LICENSE.txt 
- * file and at <http://www.imperial.ac.uk/dyson-robotics-lab/downloads/elastic-fusion/elastic-fusion-license/> 
- * unless explicitly stated.  By downloading this file you agree to 
+ *
+ * The use of the code within this file and all code within files that
+ * make up the software that is ElasticFusion is permitted for
+ * non-commercial purposes only.  The full terms and conditions that
+ * apply to the code within this file are detailed within the LICENSE.txt
+ * file and at <http://www.imperial.ac.uk/dyson-robotics-lab/downloads/elastic-fusion/elastic-fusion-license/>
+ * unless explicitly stated.  By downloading this file you agree to
  * comply with these terms.
  *
- * If you wish to use any of this code for commercial purposes then 
+ * If you wish to use any of this code for commercial purposes then
  * please email researchcontracts.engineering@imperial.ac.uk.
  *
  */
- 
+
 #include "ElasticFusion.h"
 
 ElasticFusion::ElasticFusion(const int timeDelta,
@@ -720,6 +720,12 @@ void ElasticFusion::savePly()
     std::string filename = saveFilename;
     filename.append(".ply");
 
+    //new pointcloud object
+
+    pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGBNormal>);
+    cloud->points.resize(globalModel.lastCount());
+    cloud->width = static_cast<std::uint32_t> (globalModel.lastCount());
+    cloud->height = 1;
     // Open file
     std::ofstream fs;
     fs.open (filename.c_str ());
@@ -766,6 +772,8 @@ void ElasticFusion::savePly()
     // Open file in binary appendable
     std::ofstream fpout (filename.c_str (), std::ios::app | std::ios::binary);
 
+
+
     for(unsigned int i = 0; i < globalModel.lastCount(); i++)
     {
         Eigen::Vector4f pos = mapData[(i * 3) + 0];
@@ -778,6 +786,19 @@ void ElasticFusion::savePly()
             nor[0] *= -1;
             nor[1] *= -1;
             nor[2] *= -1;
+
+
+            //pointcloud conversion
+
+            cloud->points[i].x =pos[0];
+            cloud->points[i].y =pos[1];
+            cloud->points[i].z =pos[2];
+            cloud->points[i].normal_x =nor[0];
+            cloud->points[i].normal_y =nor[0];
+            cloud->points[i].normal_z =nor[0];
+            cloud->points[i].r = int(col[0]) >> 16 & 0xFF;
+            cloud->points[i].g = int(col[0]) >> 8 & 0xFF;
+            cloud->points[i].b = int(col[0]) & 0xFF;
 
             float value;
             memcpy (&value, &pos[0], sizeof (float));
@@ -792,6 +813,11 @@ void ElasticFusion::savePly()
             unsigned char r = int(col[0]) >> 16 & 0xFF;
             unsigned char g = int(col[0]) >> 8 & 0xFF;
             unsigned char b = int(col[0]) & 0xFF;
+
+            cloud->points[i].r = static_cast<std::uint8_t>(r);
+            cloud->points[i].g = static_cast<std::uint8_t>(g);
+            cloud->points[i].b = static_cast<std::uint8_t>(b);
+
 
             fpout.write (reinterpret_cast<const char*> (&r), sizeof (unsigned char));
             fpout.write (reinterpret_cast<const char*> (&g), sizeof (unsigned char));
@@ -810,7 +836,8 @@ void ElasticFusion::savePly()
             fpout.write (reinterpret_cast<const char*> (&value), sizeof (float));
         }
     }
-
+    //pcl::io::savePCDFileASCII ("test_pcd.pcd", cloud);
+    pcl::io::savePCDFileASCII("test_pcd.pcd", *cloud);
     // Close file
     fs.close ();
 

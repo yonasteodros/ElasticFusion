@@ -7,6 +7,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Pangolin 0.1 REQUIRED)
 find_package(CUDA REQUIRED)
 find_package(SuiteSparse REQUIRED)
+find_package(PCL 1.8 REQUIRED COMPONENTS common io octree)
+add_definitions(${PCL_DEFINITIONS})
 
 set(efusion_SHADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Shaders" CACHE PATH "Where the shaders live")
 
@@ -14,6 +16,7 @@ include_directories(${Pangolin_INCLUDE_DIRS})
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(${SUITESPARSE_INCLUDE_DIRS})
+include_directories(${PCL_INCLUDE_DIRS})
 
 file(GLOB srcs *.cpp)
 file(GLOB utils_srcs Utils/*.cpp)
@@ -73,7 +76,8 @@ target_link_libraries(efusion
                       ${Pangolin_LIBRARIES}
                       ${CUDA_LIBRARIES}
                       ${SUITESPARSE_LIBRARIES}
-					  ${EXTRA_WINDOWS_LIBS}
+                      ${EXTRA_WINDOWS_LIBS}
+                      ${PCL_LIBRARIES}
 )
 
 INSTALL(TARGETS efusion
