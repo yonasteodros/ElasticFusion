@@ -796,9 +796,7 @@ void ElasticFusion::savePly()
             cloud->points[i].normal_x =nor[0];
             cloud->points[i].normal_y =nor[0];
             cloud->points[i].normal_z =nor[0];
-            cloud->points[i].r = int(col[0]) >> 16 & 0xFF;
-            cloud->points[i].g = int(col[0]) >> 8 & 0xFF;
-            cloud->points[i].b = int(col[0]) & 0xFF;
+
 
             float value;
             memcpy (&value, &pos[0], sizeof (float));
@@ -813,10 +811,14 @@ void ElasticFusion::savePly()
             unsigned char r = int(col[0]) >> 16 & 0xFF;
             unsigned char g = int(col[0]) >> 8 & 0xFF;
             unsigned char b = int(col[0]) & 0xFF;
+            uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
 
-            cloud->points[i].r = static_cast<std::uint8_t>(r);
-            cloud->points[i].g = static_cast<std::uint8_t>(g);
-            cloud->points[i].b = static_cast<std::uint8_t>(b);
+            cloud->points[i].rgb = *reinterpret_cast<float*>(&rgb);
+            //cloud->points[i].rgb = (float)(&rgb);
+           /*cloud->points[i].r = int(col[0]) >> 16 & 0xFF;
+            cloud->points[i].g = int(col[0]) >> 8 & 0xFF;
+            cloud->points[i].b = int(col[0]) >> 8 & 0xFF;*/
+
 
 
             fpout.write (reinterpret_cast<const char*> (&r), sizeof (unsigned char));
@@ -837,7 +839,7 @@ void ElasticFusion::savePly()
         }
     }
     //pcl::io::savePCDFileASCII ("test_pcd.pcd", cloud);
-    pcl::io::savePCDFileASCII("test_pcd.pcd", *cloud);
+    pcl::io::savePCDFile("test_pcd.pcd", *cloud);
     // Close file
     fs.close ();
 
