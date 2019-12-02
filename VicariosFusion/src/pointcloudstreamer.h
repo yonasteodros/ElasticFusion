@@ -5,8 +5,8 @@
 #include <pcl/io/ply_io.h>
 #include <boost/asio.hpp>
 
-#include "cwipc_util/api_pcl.h"
-#include "cwipc_util/api.h"
+#include <cwipc_util/api_pcl.h>
+#include <cwipc_util/api.h>
 
 
 class PointcloudStreamer

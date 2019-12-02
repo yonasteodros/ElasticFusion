@@ -124,7 +124,7 @@ target_link_libraries(VicariosFusion
                       ${CUDA_CUDART_LIBRARY}
                       ${CUDA_NPP_LIBRARIES_ZED}
                       ${PCL_LIBRARIES}
-                      ${cwipc_LIBRARIES}
+                      ${cwipc_util_LIBRARIES}
 
 )
 
