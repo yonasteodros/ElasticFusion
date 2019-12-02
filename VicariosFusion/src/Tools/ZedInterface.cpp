@@ -19,14 +19,14 @@ ZedInterface::ZedInterface(int inWidth,int inHeight)
   
   latestDepthIndex.assign(-1);
 
-  init_params.camera_fps = 60; // Set fps at 30 
+  init_params.camera_fps = 60; // Set fps at 30
  // init_params.camera_resolution = sl::RESOLUTION_HD1080;  
- init_params.camera_resolution = sl::RESOLUTION_HD720; 
- // init_params.camera_resolution = sl::RESOLUTION_VGA;
+ init_params.camera_resolution = sl::RESOLUTION_HD720;
+  //init_params.camera_resolution = sl::RESOLUTION_VGA;
   init_params.depth_mode = sl::DEPTH_MODE_PERFORMANCE;
   init_params.coordinate_system = sl::COORDINATE_SYSTEM_RIGHT_HANDED_Y_UP; // OpenGL's coordinate system is right_handed
   init_params.coordinate_units = sl::UNIT_METER;    
-  init_params.depth_minimum_distance = 0.5;     
+  init_params.depth_minimum_distance = 0.2;
      
   // Open the camera
   sl::ERROR_CODE err = zed.open(init_params);
@@ -123,7 +123,7 @@ void ZedInterface::run() {
        
     sl::Mat depth_image_zed(new_width, new_height, sl::MAT_TYPE_32F_C1);
 
-           
+
     while (!quit) {  
     //  /usr/local/zed/tools/'ZED Depth Viewer'
 
@@ -143,10 +143,9 @@ void ZedInterface::run() {
 //=========================================================================
 
 
-           cv::Mat image_ocv = slMat2cvMat(image_zed);       
-           cv::cvtColor(image_ocv, image_ocv, cv::COLOR_RGBA2RGB);                   
+           cv::Mat image_ocv = slMat2cvMat(image_zed);
+           cv::cvtColor(image_ocv, image_ocv, cv::COLOR_RGBA2BGR);
            memcpy(frameBuffers[bufferIndex].first.second, image_ocv.data,  new_width * new_height * 3);
-
 
 //============================================================================= 
 
@@ -156,7 +155,8 @@ void ZedInterface::run() {
            depth_image_ocv *= 1000.0f;
            depth_image_ocv.convertTo(depth, CV_16UC1); // in mm, rounded             
            memcpy(frameBuffers[bufferIndex].first.first, depth.data , new_width * new_height * 2);
-         
+
+
            
  //=======================================================================          
            

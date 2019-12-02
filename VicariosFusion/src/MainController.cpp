@@ -186,6 +186,7 @@ void MainController::loadCalibration(const std::string & filename)
 
 void MainController::launch()
 {
+    cv::namedWindow( "Gray_image", cv::WINDOW_AUTOSIZE );
     while(good)
     {
         if(eFusion)
@@ -284,6 +285,14 @@ void MainController::run()
                 }
 
                 eFusion->processFrame(logReader->rgb, logReader->depth, logReader->timestamp, currentPose, weightMultiplier);
+                cv::Mat TempMat = cv::Mat(480, 640, CV_8UC3, logReader->rgb);
+                cv::cvtColor(TempMat, TempMat, cv::COLOR_BGR2RGB);
+                //std::memcpy(TempMat.data,image.data,image_size * sizeof(uchar));
+                cv::imshow("Gray_image",TempMat);
+
+                cv::waitKey(1);
+
+
 
                 if(currentPose)
                 {
@@ -570,9 +579,12 @@ void MainController::run()
         {
             StreamObj = new PointcloudStreamer();
             std::cout<<"Works!!!!"<<std::endl;
+
         }
         if(pangolin::Pushed(*gui->save))
         {
+
+
             eFusion->savePly();
         }
 

@@ -116,7 +116,7 @@ class GUI
             save = new pangolin::Var<bool>("ui.Save", false, false);
             reset = new pangolin::Var<bool>("ui.Reset", false, false);
             Stream = new pangolin::Var<bool>("ui.Stream", false, true);
-            flipColors = new pangolin::Var<bool>("ui.Flip RGB", false, true);
+            flipColors = new pangolin::Var<bool>("ui.Flip RGB", true, false);
 
             if(liveCap)
             {

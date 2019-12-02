@@ -26,7 +26,7 @@
 
 //compression libraries
 #include "pointcloudstreamer.h"
-
+#include <opencv2/opencv.hpp>
 #ifndef MAINCONTROLLER_H_
 #define MAINCONTROLLER_H_
 

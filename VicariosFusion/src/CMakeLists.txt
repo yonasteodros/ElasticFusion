@@ -23,7 +23,6 @@ find_package(BLAS REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Pangolin 0.1 REQUIRED)
 find_package(CUDA REQUIRED)
-find_package(OpenNI2 REQUIRED)
 find_package(efusion REQUIRED)
 find_package(SuiteSparse REQUIRED)
 find_package(OpenCV)
@@ -49,6 +48,7 @@ if(WIN32)
   include_directories(${JPEG_INCLUDE_DIR})
 endif()
 
+option(WITH_ZED "Build with ZED support?" ${REALSENSE2_FOUND})
 
 
 if(WITH_ZED)

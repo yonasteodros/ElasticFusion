@@ -14,7 +14,7 @@
 class ZedInterface : public CameraInterface
 {
 public:
-  ZedInterface(int width = 640,int height = 480);
+  ZedInterface(int width = 1280,int height = 720);
   virtual ~ZedInterface();
 
   const int width,height;   

@@ -109,13 +109,16 @@ void LiveLogReader::getNext()
     imageSize = Resolution::getInstance().numPixels() * 3;
     depthSize = Resolution::getInstance().numPixels() * 2;
 
-    if(flipColors)
+   if(flipColors)
     {
         for(int i = 0; i < Resolution::getInstance().numPixels() * 3; i += 3)
         {
             std::swap(rgb[i + 0], rgb[i + 2]);
         }
+
+
     }
+
 }
 
 const std::string LiveLogReader::getFile()
