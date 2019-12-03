@@ -12,6 +12,11 @@ add_definitions(${PCL_DEFINITIONS})
 
 set(efusion_SHADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Shaders" CACHE PATH "Where the shaders live")
 
+
+find_package(cwipc_util REQUIRED )
+add_definitions(${cwipc_util_PYTHON_DIRS})
+
+include_directories(${cwipc_util_INCLUDE_DIRS})
 include_directories(${Pangolin_INCLUDE_DIRS})
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EIGEN_INCLUDE_DIRS})
@@ -78,6 +83,7 @@ target_link_libraries(efusion
                       ${SUITESPARSE_LIBRARIES}
                       ${EXTRA_WINDOWS_LIBS}
                       ${PCL_LIBRARIES}
+                      ${cwipc_util_LIBRARIES}
 )
 
 INSTALL(TARGETS efusion

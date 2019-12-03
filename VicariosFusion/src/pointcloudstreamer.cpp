@@ -4,26 +4,40 @@
 
 PointcloudStreamer::PointcloudStreamer()
 {
+
     std::cout<<" The stream class is created"<<std::endl;
 }
 
-int PointcloudStreamer::Stream()
+int PointcloudStreamer::Stream(cwipc_pcl_pointcloud test)
 {
 
-         int status;
+         bool status =true;
+
         try
         {
-            status = cwipc_write("/home/user/Development/3DDataSet/Egyptian_fused.ply", obj, &message);
+                //obj= cwipc_read(test, 0, &message, CWIPC_API_VERSION);
+                uint64_t timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+                cwipc *obj = cwipc_from_pcl(test, timestamp, NULL, CWIPC_API_VERSION);
+                //obj = cwipc_from_pcl()
+                if (obj == NULL) {
+                    std::cout<<" Cannot read pointcloud: %s\n"<< message;
+                    return 1;
+                }
+                else
+                {
+                   int sta = cwipc_write_debugdump("pointcloud1.cwipcdump", obj, &message);
+                   if (sta < 0) {
+                       std::cout<<" Cannot save pointcloud to cwipcdump: %s\n"<< message;
+                        }
+                   else{
+                       status=false;
+                   }
+                }
         }
         catch (std::exception& e)
         {
             std::cerr << "Exception caught : " << e.what() << std::endl;
         }
 
-
-    if (status < 0) {
-        std::cerr << "Egyptian_fused.ply" << ": Cannot save pointcloud to ply: " << message << std::endl;
-        return 1;
-     }
    return 0;
 }

@@ -44,7 +44,9 @@ class MainController
         void loadCalibration(const std::string & filename);
 
         bool good;
-        PointcloudStreamer * StreamObj;
+        PointcloudStreamer * StreamObj= new PointcloudStreamer();
+        cwipc_pcl_pointcloud cwipc_pcl;
+
         ElasticFusion * eFusion;
 
         GUI * gui;
@@ -81,6 +83,8 @@ class MainController
         int framesToSkip;
         bool streaming;
         bool resetButton;
+
+
 
         Resize * resizeStream;
 };

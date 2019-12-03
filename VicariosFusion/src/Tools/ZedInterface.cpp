@@ -132,7 +132,7 @@ void ZedInterface::run() {
            zed.retrieveImage(image_zed, sl::VIEW_LEFT, sl::MEM_CPU, new_width, new_height);
           // zed.retrieveImage(depth_image_zed, sl::VIEW_DEPTH, sl::MEM_CPU, new_width, new_height); 
            zed.retrieveMeasure(depth_image_zed, sl::MEASURE_DEPTH, sl::MEM_CPU, new_width,new_height);      
-        
+
            lastDepthTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
            int bufferIndex = (latestDepthIndex.getValue() + 1) % numBuffers; 
@@ -144,6 +144,7 @@ void ZedInterface::run() {
 
 
            cv::Mat image_ocv = slMat2cvMat(image_zed);
+           //std::cout << "size  = " <<image_ocv.size();
            cv::cvtColor(image_ocv, image_ocv, cv::COLOR_RGBA2BGR);
            memcpy(frameBuffers[bufferIndex].first.second, image_ocv.data,  new_width * new_height * 3);
 

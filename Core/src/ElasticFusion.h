@@ -40,6 +40,9 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 
+#include <cwipc_util/api_pcl.h>
+#include <cwipc_util/api.h>
+
 class ElasticFusion
 {
     public:
@@ -251,6 +254,12 @@ class ElasticFusion
         EFUSION_API void savePly();
 
         /**
+        *
+        *
+        */
+        EFUSION_API cwipc_pcl_pointcloud generatepcl();
+
+        /**
          * Renders a normalised view of the input raw depth for displaying as an OpenGL texture
          * (this is stored under textures[GPUTexture::DEPTH_NORM]
          * @param minVal minimum depth value to render
@@ -328,6 +337,9 @@ class ElasticFusion
         bool so3;
         bool frameToFrameRGB;
         float depthCutoff;
+
+        cwipc_pcl_point point;
+        cwipc_pcl_pointcloud pc = new_cwipc_pcl_pointcloud();
 };
 
 #endif /* ELASTICFUSION_H_ */

@@ -577,11 +577,10 @@ void MainController::run()
 
         if(gui->Stream->Get())
         {
-            StreamObj = new PointcloudStreamer();
-            int stat = StreamObj->Stream();
-            std::cout<<"Works!!!!"<<std::endl;
-
-        }
+            ////StreamObj->Stream();
+            cwipc_pcl = eFusion->generatepcl();
+            StreamObj->Stream(cwipc_pcl);
+         }
         if(pangolin::Pushed(*gui->save))
         {
 

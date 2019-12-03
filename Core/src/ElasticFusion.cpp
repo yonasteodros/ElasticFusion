@@ -715,17 +715,72 @@ void ElasticFusion::normaliseDepth(const float & minVal, const float & maxVal)
     computePacks[ComputePack::NORM]->compute(textures[GPUTexture::DEPTH_RAW]->texture, &uniforms);
 }
 
+cwipc_pcl_pointcloud ElasticFusion::generatepcl()
+{
+
+   /*new pointcloud object
+    pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGBNormal>);
+    cloud->points.resize(globalModel.lastCount());
+    cloud->width = static_cast<std::uint32_t> (globalModel.lastCount());
+    cloud->height = 1;
+    */
+    pc->width = static_cast<std::uint32_t> (globalModel.lastCount());
+    pc->height = 1;
+
+    Eigen::Vector4f * mapData = globalModel.downloadMap();
+
+    /*int validCount = 0;
+
+    for(unsigned int i = 0; i < globalModel.lastCount(); i++)
+    {
+        Eigen::Vector4f pos = mapData[(i * 3) + 0];
+
+        if(pos[3] > confidenceThreshold)
+        {
+            validCount++;
+        }
+    }
+    */
+
+  for(unsigned int i = 0; i < globalModel.lastCount(); i++)
+    {
+        Eigen::Vector4f pos = mapData[(i * 3) + 0];
+
+        if(pos[3] > confidenceThreshold)
+        {
+            Eigen::Vector4f col = mapData[(i * 3) + 1];
+            /*Eigen::Vector4f nor = mapData[(i * 3) + 2];
+
+            nor[0] *= -1;
+            nor[1] *= -1;
+            nor[2] *= -1;
+            */
+            point.x =pos[0];
+            point.y =pos[1];
+            point.z =pos[2];
+
+            unsigned char r = int(col[0]) >> 16 & 0xFF;
+            unsigned char g = int(col[0]) >> 8 & 0xFF;
+            unsigned char b = int(col[0]) & 0xFF;
+            uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
+            //cloud->points[i].rgb = *reinterpret_cast<float*>(&rgb);
+             point.rgb=*reinterpret_cast<float*>(&rgb);
+             pc->push_back(point);
+           }
+    }
+    //pcl::io::savePCDFileASCII ("test_pcd.pcd", cloud);
+    //pcl::io::savePCDFile("test_pcd.pcd", *cloud);
+    delete [] mapData;
+    return pc;
+}
+
+
+
 void ElasticFusion::savePly()
 {
     std::string filename = saveFilename;
     filename.append(".ply");
 
-    //new pointcloud object
-
-    pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGBNormal>);
-    cloud->points.resize(globalModel.lastCount());
-    cloud->width = static_cast<std::uint32_t> (globalModel.lastCount());
-    cloud->height = 1;
     // Open file
     std::ofstream fs;
     fs.open (filename.c_str ());
@@ -788,16 +843,6 @@ void ElasticFusion::savePly()
             nor[2] *= -1;
 
 
-            //pointcloud conversion
-
-            cloud->points[i].x =pos[0];
-            cloud->points[i].y =pos[1];
-            cloud->points[i].z =pos[2];
-            cloud->points[i].normal_x =nor[0];
-            cloud->points[i].normal_y =nor[0];
-            cloud->points[i].normal_z =nor[0];
-
-
             float value;
             memcpy (&value, &pos[0], sizeof (float));
             fpout.write (reinterpret_cast<const char*> (&value), sizeof (float));
@@ -811,15 +856,6 @@ void ElasticFusion::savePly()
             unsigned char r = int(col[0]) >> 16 & 0xFF;
             unsigned char g = int(col[0]) >> 8 & 0xFF;
             unsigned char b = int(col[0]) & 0xFF;
-            uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
-
-            cloud->points[i].rgb = *reinterpret_cast<float*>(&rgb);
-            //cloud->points[i].rgb = (float)(&rgb);
-           /*cloud->points[i].r = int(col[0]) >> 16 & 0xFF;
-            cloud->points[i].g = int(col[0]) >> 8 & 0xFF;
-            cloud->points[i].b = int(col[0]) >> 8 & 0xFF;*/
-
-
 
             fpout.write (reinterpret_cast<const char*> (&r), sizeof (unsigned char));
             fpout.write (reinterpret_cast<const char*> (&g), sizeof (unsigned char));
@@ -838,8 +874,6 @@ void ElasticFusion::savePly()
             fpout.write (reinterpret_cast<const char*> (&value), sizeof (float));
         }
     }
-    //pcl::io::savePCDFileASCII ("test_pcd.pcd", cloud);
-    pcl::io::savePCDFile("test_pcd.pcd", *cloud);
     // Close file
     fs.close ();
 
