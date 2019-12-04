@@ -28,6 +28,7 @@ find_package(SuiteSparse REQUIRED)
 find_package(OpenCV)
 find_package(RealSense2 QUIET)
 find_package(cwipc_util REQUIRED )
+find_package(cwipc_codec REQUIRED )
 find_package(PCL 1.8 REQUIRED COMPONENTS common io octree)
 
 
@@ -67,6 +68,7 @@ link_directories(${ZED_LIBRARY_DIR})
 link_directories(${CUDA_LIBRARY_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 link_directories(${cwipc_util_LIBRARY_DIRS})
+link_directories(${cwipc_util_LIBRARY_DIRS})
 
 include_directories(${ZLIB_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIRS})
@@ -75,7 +77,7 @@ include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EFUSION_INCLUDE_DIR})
 include_directories(${OPENNI2_INCLUDE_DIR})
 include_directories(${PCL_INCLUDE_DIRS})
-include_directories(${cwipc_util_INCLUDE_DIRS})
+include_directories(${cwipc_codec_INCLUDE_DIRS})
 
 add_definitions(${cwipc_util_PYTHON_DIRS})
 
@@ -125,6 +127,7 @@ target_link_libraries(VicariosFusion
                       ${CUDA_NPP_LIBRARIES_ZED}
                       ${PCL_LIBRARIES}
                       ${cwipc_util_LIBRARIES}
+                      ${cwipc_codec_LIBRARIES}
 
 )
 

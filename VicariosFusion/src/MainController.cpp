@@ -579,7 +579,7 @@ void MainController::run()
         {
             ////StreamObj->Stream();
             cwipc_pcl = eFusion->generatepcl();
-            StreamObj->Stream(cwipc_pcl);
+            StreamObj->compression(cwipc_pcl);
          }
         if(pangolin::Pushed(*gui->save))
         {

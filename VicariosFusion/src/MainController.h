@@ -44,7 +44,7 @@ class MainController
         void loadCalibration(const std::string & filename);
 
         bool good;
-        PointcloudStreamer * StreamObj= new PointcloudStreamer();
+        PointcloudStreamer * StreamObj= new PointcloudStreamer(true);
         cwipc_pcl_pointcloud cwipc_pcl;
 
         ElasticFusion * eFusion;
